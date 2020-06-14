@@ -3,6 +3,15 @@
 const gulp = require("gulp");
 const webpack = require("webpack-stream");
 const browsersync = require("browser-sync");
+const htmlmin = require("gulp-htmlmin");
+const imagemin = require('gulp-imagemin');
+const cleanCSS = require('gulp-clean-css');
+ 
+gulp.task('minify-css', () => {
+  return gulp.src('src/assets/css/style.css')
+    .pipe(cleanCSS({compatibility: 'ie8'}))
+    .pipe(gulp.dest('dist/assets/css'));
+});
 
 const dist = "./dist/";
 
@@ -10,6 +19,18 @@ gulp.task("copy-html", () => {
     return gulp.src("./src/index.html")
                 .pipe(gulp.dest(dist))
                 .pipe(browsersync.stream());
+});
+
+gulp.task('html', function(){
+  return gulp.src("src/*.html")
+  .pipe(htmlmin({ collapseWhitespace: true }))
+  .pipe(gulp.dest("dist/"));
+});
+
+gulp.task('images', function(){
+  return gulp.src("src/assets/img/**")
+  .pipe(imagemin())
+  .pipe(gulp.dest("dist/assets/img"));
 });
 
 gulp.task("build-js", () => {
